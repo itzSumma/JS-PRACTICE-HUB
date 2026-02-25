@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Todo List</title>
+
+  <!-- 
+    ════════════════════════════════════════
+    WHAT IS THIS LINE?
+    We are loading Tailwind CSS from the internet.
+    Tailwind gives us ready-made class names for styling.
+    Instead of writing CSS yourself, you just write class names.
+
+    Example:
+      bg-blue-500   → blue background
+      text-white    → white text
+      p-4           → padding (space inside)
+      rounded-lg    → rounded corners
+    ════════════════════════════════════════
+  -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /*
+      ════════════════════════════════════════
+      A FEW CUSTOM STYLES
+      We only write custom CSS for things
+      Tailwind cannot do on its own.
+      ════════════════════════════════════════
+    */
+
+    /* When a task is marked done → show a line through it */
+    .completed-task {
+      text-decoration: line-through;
+      color: #9ca3af; /* gray */
+    }
+
+    /* Smooth animation when a new task appears */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0px);  }
+    }
+    .new-task {
+      animation: fadeIn 0.2s ease;
+    }
+  </style>
+</head>
+
+<!--
+  ════════════════════════════════════════
+  <body> — Everything the user sees goes inside here
+
+  TAILWIND CLASSES USED HERE:
+  min-h-screen   → the page is at least 100% of screen height
+  bg-slate-100   → light gray background
+  flex           → use flexbox (a layout system)
+  justify-center → center things horizontally
+  items-start    → align to the top
+  p-6            → padding: 24px on all sides
+  ════════════════════════════════════════
+-->
+<body class="min-h-screen bg-slate-100 flex justify-center items-start p-6">
+
+  <!--
+    ════════════════════════════════════════
+    THE CARD (white box in the center)
+
+    w-full        → take full width
+    max-w-lg      → but never wider than 512px
+    bg-white      → white background
+    rounded-2xl   → very rounded corners
+    shadow-lg     → drop shadow under the card
+    overflow-hidden → hide anything that goes outside the card
+    ════════════════════════════════════════
+  -->
+  <div class="w-full max-w-lg bg-white rounded-2xl shadow-lg overflow-hidden">
+
+    <!-- ══════════════════════════════════
+         TOP HEADER BAR (dark background)
+         bg-gray-900  → very dark background
+         p-6          → padding inside: 24px
+         ══════════════════════════════════ -->
+    <div class="bg-gray-900 p-6">
+
+      <!-- Small label above the title -->
+      <!-- text-gray-400  → muted gray text
+           text-xs        → extra small font
+           uppercase      → ALL CAPS
+           tracking-widest → lots of space between letters -->
+      <p class="text-gray-400 text-xs uppercase tracking-widest mb-1">
+        My Tasks
+      </p>
+
+      <!-- Main title -->
+      <!-- text-white   → white text
+           text-3xl     → large font size
+           font-bold    → bold -->
+      <h1 class="text-white text-3xl font-bold">
+        📝 Todo List
+      </h1>
+
+      <!-- This counter updates automatically when tasks change -->
+      <!-- id="counter" lets JavaScript find and update this text -->
+      <p id="counter" class="text-gray-400 text-sm mt-2">
+        0 tasks
+      </p>
+
+    </div>
+    <!-- END OF HEADER -->
+
+
+    <!-- ══════════════════════════════════
+         MAIN CONTENT AREA
+         p-6  → padding inside: 24px
+         ══════════════════════════════════ -->
+    <div class="p-6">
+
+      <!-- ─────────────────────────────────
+           INPUT ROW
+           (the text box + Add button)
+
+           flex   → put children side by side
+           gap-2  → 8px space between them
+           mb-6   → 24px margin below this row
+           ───────────────────────────────── -->
+      <div class="flex gap-2 mb-6">
+
+        <!--
+          THE TEXT INPUT
+          id="taskInput"   → JavaScript uses this to read what the user typed
+          type="text"      → it's a text field
+
+          TAILWIND CLASSES:
+          flex-1           → take up all remaining space
+          border-2         → 2px border
+          border-gray-200  → light gray border color
+          rounded-xl       → rounded corners
+          px-4 py-3        → padding: left/right=16px, top/bottom=12px
+          text-sm          → small font
+          outline-none     → remove the default browser focus ring
+          focus:border-blue-500 → when user clicks on it, border turns blue
+          transition-colors     → smooth color change
+        -->
+        <input
+          id="taskInput"
+          type="text"
+          placeholder="Write your task here..."
+          class="
+            flex-1
+            border-2 border-gray-200
+            rounded-xl
+            px-4 py-3
+            text-sm text-gray-800
+            placeholder:text-gray-300
+            outline-none
+            focus:border-blue-500
+            transition-colors
+          "
+        />
+
+        <!--
+          THE ADD BUTTON
+          onclick="addTask()" → when clicked, run the addTask() function in JS
+
+          TAILWIND CLASSES:
+          bg-blue-600      → blue background
+          hover:bg-blue-700 → slightly darker when mouse is on it
+          text-white       → white text
+          px-5 py-3        → padding
+          rounded-xl       → rounded corners
+          text-sm          → small font
+          font-semibold    → slightly bold
+          transition-colors → smooth color change
+          shrink-0         → don't shrink this button
+        -->
+        <button
+          onclick="addTask()"
+          class="
+            bg-blue-600 hover:bg-blue-700
+            text-white
+            px-5 py-3
+            rounded-xl
+            text-sm font-semibold
+            transition-colors
+            shrink-0
+          "
+        >
+          Add
+        </button>
+
+      </div>
+      <!-- END OF INPUT ROW -->
+
+
+      <!-- ─────────────────────────────────
+           THE TASK LIST
+           id="taskList" → JavaScript finds this and adds tasks here
+           space-y-2     → 8px vertical space between each task
+           ───────────────────────────────── -->
+      <ul id="taskList" class="space-y-2"></ul>
+
+
+      <!-- ─────────────────────────────────
+           EMPTY MESSAGE
+           Shows when there are no tasks.
+           JavaScript hides/shows this.
+
+           id="emptyMsg"  → JavaScript finds this element
+           text-center    → center the text
+           py-10          → padding top and bottom: 40px
+           ───────────────────────────────── -->
+      <div id="emptyMsg" class="text-center py-10">
+        <p class="text-4xl mb-3">🗒️</p>
+        <p class="text-gray-400 text-sm">No tasks yet. Add one above!</p>
+      </div>
+
+
+      <!-- ─────────────────────────────────
+           FOOTER (shown only when tasks exist)
+           flex            → side by side
+           justify-between → push items to left and right
+           items-center    → vertically center them
+           mt-4 pt-4       → margin and padding on top
+           border-t        → a line on top
+           border-gray-100 → very light gray line
+           hidden          → start hidden, JS will show it
+           ───────────────────────────────── -->
+      <div
+        id="footer"
+        class="hidden flex justify-between items-center mt-4 pt-4 border-t border-gray-100"
+      >
+        <!-- How many tasks are left -->
+        <span id="leftCount" class="text-xs text-gray-400"></span>
+
+        <!-- Button to delete all completed tasks -->
+        <button
+          onclick="clearCompleted()"
+          class="text-xs text-gray-400 hover:text-red-500 transition-colors"
+        >
+          Clear completed
+        </button>
+      </div>
+
+    </div>
+    <!-- END OF MAIN CONTENT -->
+
+  </div>
+  <!-- END OF CARD -->
+
+
+
+
+  <!-- ════════════════════════════════════════════════════════
+       JAVASCRIPT — This is the brain of the app
+       Everything below controls how the app WORKS.
+       ════════════════════════════════════════════════════════ -->
+  <script>
+
+    // ─────────────────────────────────────────────────────────
+    // THE DATA
+    // This array holds ALL our tasks.
+    // Each task is an object with two pieces of info:
+    //   text   → the task name  (e.g. "Buy groceries")
+    //   isDone → is it complete? (true or false)
+    //
+    // Example of what it looks like after adding 2 tasks:
+    // [
+    //   { text: "Buy groceries", isDone: false },
+    //   { text: "Call mom",      isDone: true  }
+    // ]
+    // ─────────────────────────────────────────────────────────
+    let tasks = [];
+
+
+    // ─────────────────────────────────────────────────────────
+    // FUNCTION: addTask()
+    // Runs when the user clicks "Add" or presses Enter.
+    //
+    // STEPS:
+    // 1. Read what the user typed in the input box
+    // 2. If it's empty → do nothing (return early)
+    // 3. Create a new task object and add it to our array
+    // 4. Clear the input box
+    // 5. Rebuild the screen (render)
+    // ─────────────────────────────────────────────────────────
+    function addTask() {
+      // Step 1: Get the input element, then get its value
+      const input = document.getElementById('taskInput');
+      const text = input.value.trim(); // .trim() removes spaces from start/end
+
+      // Step 2: Stop if the user typed nothing
+      if (text === '') {
+        input.focus(); // put cursor back in the input box
+        return;        // exit the function early
+      }
+
+      // Step 3: Add a new task to our array
+      tasks.push({
+        text: text,     // the task name
+        isDone: false   // not done yet
+      });
+
+      // Step 4: Clear the input box
+      input.value = '';
+      input.focus(); // keep cursor in the box so user can type next task quickly
+
+      // Step 5: Rebuild the screen
+      render();
+    }
+
+
+    // ─────────────────────────────────────────────────────────
+    // FUNCTION: toggleDone(index)
+    // Runs when the user clicks the checkbox next to a task.
+    //
+    // "index" = the position of the task in our array
+    //   (0 = first task, 1 = second task, etc.)
+    //
+    // The ! symbol means "opposite of"
+    //   if isDone is false  → !false = true  (mark as done)
+    //   if isDone is true   → !true  = false (mark as not done)
+    // ─────────────────────────────────────────────────────────
+    function toggleDone(index) {
+      tasks[index].isDone = !tasks[index].isDone;
+      render(); // rebuild the screen to show the change
+    }
+
+
+    // ─────────────────────────────────────────────────────────
+    // FUNCTION: deleteTask(index)
+    // Runs when the user clicks the ✕ delete button.
+    //
+    // .splice(index, 1) means:
+    //   "starting at position [index], remove 1 item"
+    // ─────────────────────────────────────────────────────────
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      render();
+    }
+
+
+    // ─────────────────────────────────────────────────────────
+    // FUNCTION: clearCompleted()
+    // Removes all tasks where isDone === true.
+    //
+    // .filter() creates a NEW array, keeping only items
+    // where the condition is true.
+    // We keep tasks where isDone is false (not done yet).
+    // ─────────────────────────────────────────────────────────
+    function clearCompleted() {
+      tasks = tasks.filter(function(task) {
+        return task.isDone === false; // keep only unfinished tasks
+      });
+      render();
+    }
+
+
+    // ─────────────────────────────────────────────────────────
+    // FUNCTION: render()
+    // This is the most important function.
+    // It WIPES the task list on screen and REBUILDS it
+    // from our tasks[] array.
+    //
+    // Think of it like a TV screen refreshing:
+    // Every time data changes, we repaint the whole screen.
+    // ─────────────────────────────────────────────────────────
+    function render() {
+      // Get the HTML elements we need to update
+      const taskList  = document.getElementById('taskList');
+      const emptyMsg  = document.getElementById('emptyMsg');
+      const footer    = document.getElementById('footer');
+      const leftCount = document.getElementById('leftCount');
+      const counter   = document.getElementById('counter');
+
+      // ── STEP 1: Clear the current list on screen
+      taskList.innerHTML = '';
+
+      // ── STEP 2: Show or hide the "No tasks" message
+      if (tasks.length === 0) {
+        emptyMsg.style.display = 'block'; // show it
+        footer.classList.add('hidden');   // hide the footer
+      } else {
+        emptyMsg.style.display = 'none';  // hide it
+        footer.classList.remove('hidden'); // show the footer
+      }
+
+      // ── STEP 3: Loop through every task and build its HTML
+      tasks.forEach(function(task, index) {
+        /*
+          What we're building for each task:
+
+          <li>                          ← the list item
+            <input type="checkbox" />  ← checkbox
+            <span>Task text here</span>← the task name
+            <button>✕</button>         ← delete button
+          </li>
+        */
+
+        // Create the <li> element
+        const li = document.createElement('li');
+        li.className = 'new-task flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:bg-gray-50 group';
+        //                            ↑ flex puts children side by side
+        //                                    ↑ gap-3 = 12px space between them
+        //                                                ↑ p-3 = padding inside
+        //                                                         ↑ rounded corners
+        //                                                                      ↑ hover = light bg on mouse-over
+        //                                                                                ↑ group = lets children react to hover
+
+
+        // ── CREATE THE CHECKBOX ──
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = task.isDone; // if isDone=true, show it checked
+        checkbox.className = 'w-4 h-4 accent-blue-600 cursor-pointer shrink-0';
+        // When checkbox is clicked, toggle this task's done state
+        checkbox.onchange = function() {
+          toggleDone(index);
+        };
+
+
+        // ── CREATE THE TEXT SPAN ──
+        const span = document.createElement('span');
+        span.textContent = task.text;
+        span.className = 'flex-1 text-sm text-gray-800';
+        // If the task is done, add strikethrough style
+        if (task.isDone) {
+          span.classList.add('completed-task');
+        }
+
+
+        // ── CREATE THE DELETE BUTTON ──
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = '✕';
+        // opacity-0 = invisible by default
+        // group-hover:opacity-100 = becomes visible when you hover over the <li>
+        deleteBtn.className = 'opacity-0 group-hover:opacity-100 text-gray-300 hover:text-red-500 text-xs px-1 transition-all shrink-0';
+        deleteBtn.onclick = function() {
+          deleteTask(index);
+        };
+
+
+        // ── ASSEMBLE: put the pieces together inside <li> ──
+        li.appendChild(checkbox);   // add checkbox to li
+        li.appendChild(span);       // add text to li
+        li.appendChild(deleteBtn);  // add delete button to li
+        taskList.appendChild(li);   // add li to the list on screen
+      });
+
+      // ── STEP 4: Update the counter texts ──
+      const doneCount   = tasks.filter(t => t.isDone).length;
+      const activeCount = tasks.length - doneCount;
+
+      counter.textContent   = tasks.length + ' tasks';
+      leftCount.textContent = activeCount + ' left to do';
+    }
+
+
+    // ─────────────────────────────────────────────────────────
+    // KEYBOARD SHORTCUT: Press Enter to add a task
+    // Instead of clicking the "Add" button every time,
+    // the user can just press Enter.
+    // ─────────────────────────────────────────────────────────
+    document.getElementById('taskInput').addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        addTask(); // same as clicking the Add button
+      }
+    });
+
+
+    // ─────────────────────────────────────────────────────────
+    // Run render() once when the page loads
+    // This sets up the initial empty state correctly.
+    // ─────────────────────────────────────────────────────────
+    render();
+
+  </script>
+
+</body>
+</html>
