@@ -1,0 +1,26 @@
+function multiply(a,b){
+    a = a-5;
+    b=b-10;
+    console.log(a,b)
+    return a*b;
+}
+let y = 10;
+let z =20;
+console.log("before calling", y,z);
+const result = multiply(y,z);
+console.log(result);
+console.log("after calling",y,z)
+///non-primitive
+
+function firstSum (arr1, arr2){
+    arr1[0]=100;
+    arr2[0]=200
+    const first = arr1[0];
+    const second = arr2[0];
+    return first*second;
+}
+const num1=[2,8,9,4];
+const num2=[9,5,2,1];
+console.log("before the function call :",num1,num2);
+const value=firstSum(num1,num2);
+console.log("after the function call:", num1,num2);
