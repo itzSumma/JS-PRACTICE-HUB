@@ -158,6 +158,17 @@ myCounter(); // 3
 */
 //* Ans:
 
+function counter() {
+  let count = 0;
+  return function() {
+   count ++;
+   return count;
+  }
+}
+const myCounter = counter();
+myCounter(); 
+myCounter(); 
+myCounter(); 
 /* 
 ? Problem 11
 even numbers এর square যোগ করো। 
@@ -184,3 +195,21 @@ const cart = [
 Expected Output: 4
 */
 //* Ans:
+const cart = [
+  { name: "Shirt", price: 500, quantity: 2 },
+  { name: "Pant", price: 800, quantity: 3 },
+  { name: "Shoes", price: 1500, quantity: 1 },
+  { name: "Cap", price: 300, quantity: 5 }
+];
+
+const totalQuantity = cart.reduce((sum, item) => {
+  if (item.price > 500) {
+    return sum + item.quantity;
+  }
+  return sum;
+}, 0);
+
+// Arrow function + reduce
+// const totalQuantity = cart.reduce((sum, item) => item.price > 500 ? sum + item.quantity : sum, 0);
+
+// console.log(totalQuantity); 
