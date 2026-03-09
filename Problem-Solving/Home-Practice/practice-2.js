@@ -55,3 +55,14 @@ for (let student of students) {
   }
 }
 console.log(topStudent);
+
+// array থেকে duplicate remove করে new array বানাও।
+const numbers = [1,2,3,4,2,5,6,3,7,1];
+const unique = [];
+for (let num of numbers) {
+  // check if already exists
+  if (!unique.includes(num)) {
+    unique.push(num);
+  }
+}
+console.log(unique);
