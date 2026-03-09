@@ -7,7 +7,8 @@ let reversed = "";
 for (let i = text.length - 1; i >= 0; i--) {
   // add characters one by one
   reversed = reversed + text[i];
-}console.log(reversed);
+}
+console.log(reversed);
 // problem:2
 // word এর মধ্যে কতটি vowel (a,e,i,o,u) আছে তা বের করো।
 const word = "programming";
@@ -35,3 +36,22 @@ for (let word of words) {
   }
 }
 console.log(longest);
+
+// যে student এর mark সবচেয়ে বেশি তার name বের করো।
+const students = [
+  { name: "Rahim", mark: 75 },
+  { name: "Karim", mark: 90 },
+  { name: "Sakib", mark: 85 },
+  { name: "Tamim", mark: 95 },
+];
+let highest = 0;
+let topStudent = "";
+// loop through students
+for (let student of students) {
+  // check highest mark
+  if (student.mark > highest) {
+    highest = student.mark;
+    topStudent = student.name;
+  }
+}
+console.log(topStudent);
