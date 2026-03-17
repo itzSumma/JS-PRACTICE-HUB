@@ -48,4 +48,20 @@ function firstUnique(str) {
 }
 console.log(firstUnique("aabbcde"));
 
-/** */
+/*
+*Find two numbers that add up to a target.
+*Input: [2, 7, 11, 15], target = 9
+*ANS:
+*/
+function twoSum(arr, target) {
+  let map = {};
+  for (let num of arr) {
+    let diff = target - num;
+
+    if (map[diff]) {
+      return [diff, num];
+    }
+    map[num] = true;
+  }
+}
+console.log(twoSum([2,7,11,15], 9)); 
