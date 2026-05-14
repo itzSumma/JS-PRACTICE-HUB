@@ -90,3 +90,32 @@ const gradedStudents = students.reduce((acc, student) => {
 }, {});
 
 // console.log(gradedStudents);
+/*
+ * You have an array of "Task" objects for a project management tool. Each task has a title and a priority level (High, Medium, Low). Group the tasks so the user can see exactly what they need to focus on first.
+ */
+
+Input:const tasks = [
+  { title: "Fix Login Bug", priority: "High" },
+  { title: "Update Profile Picture", priority: "Low" },
+  { title: "Implement Payment Gateway", priority: "High" },
+  { title: "Change Button Color", priority: "Medium" },
+  { title: "Write Documentation", priority: "Medium" }
+];
+//**ANS*/
+const tasks = [
+  { title: "Fix Login Bug", priority: "High" },
+  { title: "Update Profile Picture", priority: "Low" },
+  { title: "Implement Payment Gateway", priority: "High" },
+  { title: "Change Button Color", priority: "Medium" },
+  { title: "Write Documentation", priority: "Medium" }
+];
+
+const groupedTasks = tasks.reduce((acc, task) => {
+  const priority = task.priority;
+   if (!acc[priority]) {
+    acc[priority] = [];
+  }
+  acc[priority].push(task);
+  return acc;
+}, {});
+// console.log(groupedTasks);
